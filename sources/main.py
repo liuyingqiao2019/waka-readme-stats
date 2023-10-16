@@ -133,8 +133,13 @@ async def collect_user_repositories() -> Dict:
     DBM.g("\tUser repository list collected!")
 
     contributed = await DM.get_remote_graphql("repos_contributed_to", username=GHM.USER.login)
-    contributed_nodes = [r for r in contributed["data"]["user"]["repositoriesContributedTo"]["nodes"] if r and r["name"] not in repo_names and not r["isFork"]]
-    DBM.g("\tUser contributed to repository list collected!")
+    try:
+        if contributed["data"]["user"]["repositoriesContributedTo"]["nodes"]:
+            contributed_nodes = [r for r in contributed["data"]["user"]["repositoriesContributedTo"]["nodes"] if r and r["name"] not in repo_names and not r["isFork"]]
+        DBM.g("\tUser contributed to repository list collected!")
+    except Exception as error:
+        DBM.p(f"A exception ocurred while getting the commit history! {str(error)}")
+        continue
 
     repositories["data"]["user"]["repositories"]["nodes"] += contributed_nodes
     return repositories
