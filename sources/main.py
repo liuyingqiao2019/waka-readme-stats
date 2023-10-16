@@ -133,6 +133,9 @@ async def collect_user_repositories() -> Dict:
     DBM.g("\tUser repository list collected!")
 
     contributed = await DM.get_remote_graphql("repos_contributed_to", username=GHM.USER.login)
+    print(r["name"],"r["name"]")
+    print(repo_names,'repo_names')
+    print(r["isFork"]],"r["isFork"]]")
     contributed_nodes = [r for r in contributed["data"]["user"]["repositoriesContributedTo"]["nodes"] if r["name"] not in repo_names and not r["isFork"]]
     DBM.g("\tUser contributed to repository list collected!")
 
